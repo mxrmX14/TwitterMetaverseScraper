@@ -8,12 +8,12 @@ import click
 from matplotlib.pyplot import text
 from sqlalchemy import true
 import wordcloud
-import scraper
+import scripts.scraper as scraper
 from time import sleep
 import pandas
-import processing
+import scripts.processing as processing
 from configparser import ConfigParser,RawConfigParser
-import access_sql
+import scripts.access_sql as access_sql
 
 @click.group
 def cli():
@@ -133,51 +133,10 @@ def word_cloud(input_file, output_file, text_column, width, height, max_words, e
     processing.get_wordcloud(freq,output_file,width,height,int(max_words))
 
 @click.command()
-@click.option('--query', '-q', required=False, default="(metaverse (robot OR drone OR virtual reality OR mixed reality OR augmented reality OR vr OR ar)) lang:en -is:retweet")
-def run(query):
-    header = False
-    sql = True
-    bearerToken = scraper.readConfig()
-    while True:
-        tweets = scraper.grab_tweets_now(bearerToken=bearerToken, query=query)
-        data = pandas.DataFrame({
-            "created_at": [],
-            "tweet_text": [],
-            "id": [],
-            "author_id": [],
-            "retweet_count": [],
-            "reply_count":  [],
-            "like_count": [],
-            "quote_count": [],
-            "followers_count": [],
-            "following_count": [],
-            "tweet_count": [],
-            "verified": [],
-            "account_created":[],
-            "username": [],
-            "account_location": [],
-            "bio": [],
-            "location": []
-            })
-        data = data.append(tweets)
-        #clean text
-        cleaned_text = processing.clean_text(data,int(1))
-        data['cleaned_text'] = cleaned_text
-        #add sentiment
-        sentiments = processing.get_sentiment_table(cleaned_text, int(1))
-        data['sentiment'] = sentiments
-
-
-        #test
-        #upload to sql
-        data.to_csv("test.csv")
-        print("uploading to sql")
-        access_sql.uploadToSQL(data)
-        
-        sleeptime = 3570
-        for i in range(sleeptime):
-            print(f"sleeping for {sleeptime-i} seconds  ", end="\r", flush=True)
-            sleep(1)
+@click.option('--output-file', '-o', required=True, prompt=True)
+def get_table(output_file):
+    access_sql.export(output_file)
+    
 
 cli.add_command(past)
 cli.add_command(present)
@@ -185,7 +144,7 @@ cli.add_command(clean)
 cli.add_command(sentiment)
 cli.add_command(freq)
 cli.add_command(word_cloud)
-cli.add_command(run)
+cli.add_command(get_table)
 
 if __name__ == '__main__':
     cli()
