@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-authentication/config.ini
-authentication/authentication.json
+config.ini/
+authentication.json/
 # C extensions
 *.so
 
