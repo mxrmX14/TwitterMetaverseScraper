@@ -15,6 +15,7 @@ Twitter Scraper for internship project
 ```
 $ pip install venv
 $ python3 -m venv <name of virtual environment>
+$ source <name of venv>/bin/activate
 $ pip install --editable .
 
 ```
