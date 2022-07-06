@@ -7,9 +7,11 @@ from statistics import mode
 from typing_extensions import NotRequired, Required
 import click
 from matplotlib.pyplot import text
+from numpy import require
 from sqlalchemy import true
 import wordcloud
 import twitter_scraper.scripts.scraper as scraper
+import matplotlib.pyplot as plt
 from time import sleep
 import pandas
 import twitter_scraper.scripts.processing as processing
@@ -137,7 +139,32 @@ def word_cloud(input_file, output_file, width, height, max_words, extract):
 @click.option('--output-file', '-o', required=True, prompt=True)
 def get_table(output_file):
     access_sql.export(output_file)
+
+@click.command()
+@click.option('--input-file', '-i', required=True, prompt=True)
+@click.option('--x-axis', '-x', required=True, prompt="what column is the x axis in? ", type=str)
+@click.option('--y-axis', '-y', required=True, prompt="what column is the y axis in? ", type=str)
+@click.option('--kind', '-k', required=False, default='scatter')
+def date_graph(input_file, x_axis, y_axis, kind):
+    filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'tables/'+input_file+'.csv'))
+    data = pandas.read_csv(filepath)
+    data[x_axis] = pandas.to_datetime(data[x_axis], format='%Y-%m-%d %H:%M:%S.%f')
+    print(data[x_axis])
+    data.plot(x=x_axis, y=y_axis, kind=kind)
+    plt.gcf().autofmt_xdate()
+    plt.show()
+
     
+@click.command()
+@click.option('--input-file', '-i', required=True, prompt=True)
+@click.option('--x-axis', '-x', required=True, prompt="what column is the x axis in? ", type=str)
+@click.option('--y-axis', '-y', required=True, prompt="what column is the y axis in? ", type=str)
+@click.option('--kind', '-k', required=False, default='scatter')
+def graph(input_file, x_axis, y_axis, kind):
+    filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'tables/'+input_file+'.csv'))
+    data = pandas.read_csv(filepath)
+    data.plot(x=x_axis, y=y_axis, kind=kind)
+    plt.show()
 
 cli.add_command(past)
 cli.add_command(present)
@@ -146,6 +173,8 @@ cli.add_command(sentiment)
 cli.add_command(freq)
 cli.add_command(word_cloud)
 cli.add_command(get_table)
+cli.add_command(date_graph)
+cli.add_command(graph)
 
 if __name__ == '__main__':
     cli()
