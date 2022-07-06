@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-authentication/congig.ini
+authentication/config.ini
 authentication/authentication.json
 # C extensions
 *.so
