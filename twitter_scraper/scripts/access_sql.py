@@ -12,7 +12,7 @@ def readConfig():
     host = str(config['sql']['host'])
     user = str(config['sql']['user'])
     passwd = str(config['sql']['passwd'])
-    database = str(config['sql'][database])
+    database = str(config['sql']['database'])
     return host, user, passwd, database
 
 def fetch_table_data(sql_table_name):
