@@ -2,8 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-tables/
-img/
 authentication/
 # C extensions
 *.so
