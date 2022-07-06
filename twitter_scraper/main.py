@@ -16,7 +16,8 @@ import twitter_scraper.scripts.processing as processing
 from configparser import ConfigParser,RawConfigParser
 import twitter_scraper.scripts.access_sql as access_sql
 
-@click.group
+@click.group()
+@click.version_option()
 def cli():
     pass
 

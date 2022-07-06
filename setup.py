@@ -8,6 +8,8 @@ setup(
     install_requires=[
         'Click',
         'matplotlib',
+        'nltk',
+        'google-cloud-speech'
         'mysql_connector_repackaged',
         'numpy',
         'pandas',
