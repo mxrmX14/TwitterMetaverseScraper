@@ -74,10 +74,6 @@ def get_sentiment_table(sentiment_dataframe, column):
         sentiment = sentimentProcessing.analyze_sentiment(sentiment_text[i])
         sentiment_table.loc[i,"sentiment"] = sentiment
         print(f"Done with {i} sentiment with {sentiment} score  ", end='\r', flush=True)
-        
-
-
-    # sentiment_table.to_csv("tables/"+export_name +".csv", mode='a', header=True, index=False )
     
     return sentiment_table
 

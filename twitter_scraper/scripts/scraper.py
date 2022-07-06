@@ -12,9 +12,9 @@ from time import sleep
 from configparser import RawConfigParser
 
 def readConfig():
-    configFile = 'authentication/config.ini'
+    filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'authentication/'+'config.ini'))
     config = RawConfigParser()
-    config.read(configFile)
+    config.read(filepath)
     bearerToken = str(config['tokens']['bearer'])
     return bearerToken
 

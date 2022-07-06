@@ -1,16 +1,30 @@
 from fileinput import filename
 import mysql.connector
 import pandas
+from configparser import RawConfigParser
 import os
 from sqlalchemy import create_engine
 
+def readConfig():
+    filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'authentication/'+'config.ini'))
+    config = RawConfigParser()
+    config.read(filepath)
+    host = str(config['sql']['host'])
+    user = str(config['sql']['user'])
+    passwd = str(config['sql']['passwd'])
+    database = str(config['sql'][database])
+    return host, user, passwd, database
+
 def fetch_table_data(sql_table_name):
+
+    host, user, passwd, database = readConfig()
+
     # The connect() constructor creates a connection to the MySQL server and returns a MySQLConnection object. 
     cnx = mysql.connector.connect(
-        host="192.46.216.64",
-        user="otto",
-        passwd="123456",
-        database="mainTweetsV1"
+        host=host,
+        user=user,
+        passwd=passwd,
+        database=database
     )
 
     cursor = cnx.cursor()
