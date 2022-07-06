@@ -16,9 +16,14 @@ Twitter Scraper for internship project
 $ pip install venv
 $ python3 -m venv <name of virtual environment>
 $ pip install --editable .
-$ main
+
 ```
 
 ```
 $ export GOOGLE_APPLICATION_CREDENTIALS="authentication/authentication.json"
+```
+
+# Run
+```
+$ main <command>
 ```
