@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 tables/
 img/
+authentication/
 # C extensions
 *.so
 
