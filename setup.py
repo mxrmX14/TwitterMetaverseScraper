@@ -10,6 +10,7 @@ setup(
         'matplotlib',
         'nltk',
         'google-cloud-speech',
+        'google-cloud-language',
         'mysql_connector_repackaged',
         'numpy',
         'pandas',
