@@ -40,29 +40,16 @@ def fetch_table_data(sql_table_name):
     return header, rows
 
 def export(table_name):
+    host, user, passwd, database = readConfig()
     sql_table_name = "tweets"
-    header, rows = fetch_table_data(sql_table_name)
+    engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}"  
+                      .format(user=user, pw=passwd, 
+                      db=database, host=host))
 
-    # Create csv file
+    data = pandas.read_sql_table(sql_table_name, con=engine)
     filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'tables/'+table_name+'.csv'))
-    f = open(filepath, 'w')
-
-    # Write header
-    f.write(','.join(header) + '\n')
-
-    for row in rows:
-        f.write(','.join(str(r) for r in row) + '\n')
-
-    f.close()
-    print(str(len(rows)) + ' rows written successfully to ' + f.name)
+    data.to_csv(filepath, mode='a', header=True, index=False)
+    print(data.head)
 
 
-# def uploadToSQL(df):
 
-#     df['created_at'] = pandas.to_datetime(df.created_at)
-#     df['account_created'] = pandas.to_datetime(df.account_created)
-#     engine = create_engine("mysql+pymysql://{user}:{pw}@{db}"  
-#                       .format(user="", pw="", 
-#                       db=""))
-
-#     df.to_sql('tweets', con = engine, if_exists = 'append',index=False, chunksize=10000)
