@@ -6,7 +6,6 @@ import os
 from nltk.stem.snowball import SnowballStemmer
 import nltk
 import twitter_scraper.scripts.sentimentProcessing as sentimentProcessing
-
 import matplotlib.pyplot as plt
 from nltk.probability import FreqDist
 import numpy as np
@@ -15,6 +14,10 @@ from PIL import Image
 from sqlalchemy import column
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from os import path
+import geopy
+import geopandas
+
+
 
 def extract_extra(text_dataframe, column):
 
@@ -119,3 +122,8 @@ def get_wordcloud(frequency, image_name, width, height, max_words):
 
     filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'img/'+image_name+'.png'))
     wordcloud.to_file(filepath)
+
+def get_geocode(location):
+    locator = geopy.Photon()
+    location = locator.geocode(location)
+    print("Latitude = {}, Longitude = {}".format(location.latitude, location.longitude))

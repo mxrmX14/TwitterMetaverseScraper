@@ -1,4 +1,5 @@
 from cgi import test
+from concurrent.futures import ProcessPoolExecutor
 from email import header
 from email.policy import default
 import os
@@ -89,24 +90,24 @@ def present(header, output_file,query):
             sleep(1)
         
 
-@click.command()
-@click.option('--input-file', '-i', required=True, prompt=True)
-@click.option('--output-file', '-o', required=True, prompt=True)
-def clean(input_file, output_file):
-    text_column = 1
-    data = pandas.read_csv("tables/"+input_file+".csv")
-    cleaned_text = processing.clean_text(data, int(text_column))
-    cleaned_text.to_csv("tables/"+ output_file+".csv", index=False)
+# @click.command()
+# @click.option('--input-file', '-i', required=True, prompt=True)
+# @click.option('--output-file', '-o', required=True, prompt=True)
+# def clean(input_file, output_file):
+#     text_column = 1
+#     data = pandas.read_csv("tables/"+input_file+".csv")
+#     cleaned_text = processing.clean_text(data, int(text_column))
+#     cleaned_text.to_csv("tables/"+ output_file+".csv", index=False)
 
-@click.command()
-@click.option('--input-file', '-i', required=True, prompt=True)
-@click.option('--output-file', '-o', required=True, prompt=True)
-def sentiment(input_file,output_file):
-    text_column = 1
-    data = pandas.read_csv("tables/"+input_file+".csv")
-    cleaned_text = processing.clean_text(data,int(text_column))
-    sentiments = processing.get_sentiment_table(cleaned_text, int(text_column))
-    sentiments.to_csv("tables/"+ output_file+".csv", index=False)
+# @click.command()
+# @click.option('--input-file', '-i', required=True, prompt=True)
+# @click.option('--output-file', '-o', required=True, prompt=True)
+# def sentiment(input_file,output_file):
+#     text_column = 1
+#     data = pandas.read_csv("tables/"+input_file+".csv")
+#     cleaned_text = processing.clean_text(data,int(text_column))
+#     sentiments = processing.get_sentiment_table(cleaned_text, int(text_column))
+#     sentiments.to_csv("tables/"+ output_file+".csv", index=False)
 
 @click.command()
 @click.option('--input-file', '-i', required=True, prompt=True)
@@ -163,18 +164,27 @@ def date_graph(input_file, x_axis, y_axis, kind):
 def graph(input_file, x_axis, y_axis, kind):
     filepath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'tables/'+input_file+'.csv'))
     data = pandas.read_csv(filepath)
-    data.plot(x=x_axis, y=y_axis, kind=kind)
+    data.plot(x=data[x_axis], y=data[y_axis], kind=kind)
     plt.show()
+
+@click.command()
+@click.option('--location', '-l', required=True, prompt="What's the location ", type=str)
+def geocode(location):
+    processing.get_geocode(location)
+    
+
 
 cli.add_command(past)
 cli.add_command(present)
-cli.add_command(clean)
-cli.add_command(sentiment)
+# cli.add_command(clean)
+# cli.add_command(sentiment)
 cli.add_command(freq)
 cli.add_command(word_cloud)
 cli.add_command(get_table)
 cli.add_command(date_graph)
 cli.add_command(graph)
+cli.add_command(geocode)
+
 
 if __name__ == '__main__':
     cli()
